@@ -1,0 +1,205 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>SlopeCheck – Penilaian Kestabilan Lereng</title>
+<style>
+:root{--bg:#f3f1ec;--card:#fff;--ink:#17233a;--mut:#5d6b80;--line:#dcd8cf;--inp:#fbfaf7;--navy:#1b2a41;--amb:#f2a541;--c0:#2e8b57;--c1:#d29a14;--c2:#e2761b;--c3:#c0392b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1624;--card:#18223a;--ink:#e8edf5;--mut:#9aa8bd;--line:#2b3956;--inp:#111a2e}}
+:root[data-theme="dark"]{--bg:#0f1624;--card:#18223a;--ink:#e8edf5;--mut:#9aa8bd;--line:#2b3956;--inp:#111a2e}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:#1b2a41;color:#fff;border-bottom:4px solid var(--amb)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0}
+.brand{display:flex;align-items:center;gap:12px}.brand b{font-size:20px;letter-spacing:.3px}.brand small{display:block;color:#c9d3e0;font-size:12px}
+button{font:inherit;cursor:pointer}.ghost{background:transparent;color:#fff;border:1px solid #5a6b86;border-radius:8px;padding:6px 12px;font-size:13px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:14px 0 6px}
+nav button{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--mut);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600}
+nav button[aria-selected=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;padding:10px 0 40px}
+@media(min-width:900px){.grid{grid-template-columns:minmax(0,1fr) 310px}aside{position:sticky;top:12px;align-self:start}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+h2{margin:0 0 2px;font-size:20px}h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut)}
+.sub{color:var(--mut);margin:0 0 14px;font-size:13px}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+label{display:block;font-size:12.5px;font-weight:600;color:var(--mut)}
+input,select{width:100%;margin-top:4px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--inp);color:var(--ink);font:inherit;font-size:15px}
+.iw{position:relative;display:block}.iw i{position:absolute;right:10px;top:13px;font-style:normal;font-size:12px;color:var(--mut)}
+.chk{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px}
+.chk label{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;color:var(--ink);font-weight:500;font-size:14px;cursor:pointer}
+.chk input{width:18px;height:18px;margin:0}.chk em{margin-left:auto;font-style:normal;font-size:11px;background:var(--bg);border-radius:6px;padding:2px 7px;color:var(--mut)}
+.chk label:has(input:checked){border-color:var(--c2);background:color-mix(in srgb,var(--c2) 10%,var(--card))}
+.bar{display:flex;gap:4px;margin:8px 0}.bar span{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.ov{font-size:22px;font-weight:700;color:var(--c)}
+.mini{list-style:none;margin:12px 0 0;padding:0}.mini li{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px}.mini span{color:var(--mut)}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;color:#fff;font-size:12px;font-weight:700;background:var(--c)}
+.nv{display:flex;justify-content:space-between;margin-top:6px}.nv button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:9px 16px;font-weight:600}.nv .pr{background:var(--navy);color:#fff;border-color:var(--navy)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mut);font-size:12px;text-transform:uppercase}
+.jt input{margin:0;padding:7px 8px}.two{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}@media(min-width:760px){.two.s{grid-template-columns:1fr 1fr}}
+.banner{border-left:8px solid var(--c);}.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}.kv div{background:var(--bg);border-radius:8px;padding:10px}.kv b{display:block;font-size:20px}.kv small{color:var(--mut)}
+ul.rec{padding-left:20px;margin:0}ul.rec li{margin:5px 0}.note{font-size:12px;color:var(--mut)}.lg{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--mut);margin-top:6px}.lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.pane{display:none}.pane.on{display:block}.mode{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.mc{display:block;border:2px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;color:var(--ink);font-weight:700;font-size:15px}.mc input{width:auto;margin:0 8px 0 0}.mc small{display:block;font-weight:400;color:var(--mut);margin:2px 0 0 24px;font-size:13px}.mc:has(input:checked){border-color:var(--amb);background:color-mix(in srgb,var(--amb) 14%,var(--card))}textarea{width:100%;margin-top:4px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--inp);color:var(--ink);font:13px/1.45 ui-monospace,Menlo,Consolas,monospace}
+@media print{header,nav,aside,.nv,.noprint{display:none!important}.pane{display:none!important}#p8{display:block!important}body{background:#fff;color:#000}.card{break-inside:avoid}}
+</style></head><body>
+<header><div class="wrap top"><div class="brand"><svg width="38" height="38" viewBox="0 0 38 38"><rect width="38" height="38" rx="9" fill="#f2a541"/><path d="M5 30 L5 14 L16 14 L30 28 L30 30Z" fill="#1b2a41"/><path d="M8 20 Q18 30 28 27" stroke="#fff" stroke-width="2" fill="none" stroke-dasharray="3 2"/></svg><div><b>SlopeCheck</b><small>Penilaian Kestabilan Lereng · Inspeksi Lapangan Tingkat 1–7</small></div></div><button class="ghost" id="rst">Reset data</button></div></header>
+<div class="wrap"><nav id="tabs"></nav><div class="grid"><main id="main"></main><aside id="side"></aside></div></div>
+<script>
+const $=s=>document.querySelector(s),D=Math.PI/180,ad=(a,b)=>Math.abs(((a-b)%360+540)%360-180);
+const OPT={mat:['Tanah / material lepas','Batuan'],wth:['I · Segar','II · Lapuk ringan','III · Lapuk sedang','IV · Lapuk kuat','V · Lapuk sempurna / tanah residual'],
+jenis:['Batubara','Mineral logam','Batuan / galian C','Lainnya'],
+per:[['< 1 m',6],['1–3 m',4],['3–10 m',2],['10–20 m',1],['> 20 m',0]],apt:[['Tertutup',6],['< 0,1 mm',5],['0,1–1 mm',4],['1–5 mm',1],['> 5 mm',0]],
+rgh:[['Sangat kasar',6],['Kasar',5],['Agak kasar',3],['Halus',1],['Slickensided',0]],inf:[['Tanpa isian',6],['Keras < 5 mm',4],['Keras > 5 mm',2],['Lunak < 5 mm',2],['Lunak > 5 mm',0]],
+wex:[['Tidak lapuk',6],['Lapuk ringan',5],['Lapuk sedang',3],['Lapuk kuat',1],['Terurai',0]],gw:[['Kering',15],['Lembap',10],['Basah',7],['Menetes',4],['Mengalir',0]],
+exc:[['Lereng alami',15],['Presplitting',10],['Smooth blasting',8],['Peledakan normal / mekanis',0],['Peledakan buruk',-8]]};
+const IND=[['tc','Retakan tarik di crest',3],['bg','Bulging / tonjolan di toe',3],['sp','Rembesan / mata air di muka lereng',2],['ol','Bekas longsoran lama',2],['rf','Runtuhan blok / rockfall',2],['pn','Genangan air di crest',1],['dr','Drainase buruk / tidak berfungsi',1],['bl','Peledakan dekat lereng',1],['eq','Alat berat / beban di crest',1],['sc','Timbunan dekat crest',1],['rn','Hujan lebat 7 hari terakhir',1]];
+const LBL=['Rendah · Stabil','Sedang · Waspada','Tinggi · Kritis','Sangat Tinggi · Tidak Stabil'],SH=['Rendah','Sedang','Tinggi','Sangat tinggi'];
+const SC=[['I','Sangat baik','Sangat stabil; tidak ada keruntuhan'],['II','Baik','Stabil; sebagian blok dapat runtuh'],['III','Sedang','Cukup stabil; planar pada sebagian kekar atau banyak baji'],['IV','Buruk','Tidak stabil; planar atau baji besar'],['V','Sangat buruk','Sangat tidak stabil; planar besar atau runtuh melingkar']];
+const COL=['#2a7de1','#8e44ad','#16a085','#d35400'];
+Object.assign(OPT,{model:['Mohr-Coulomb','Hoek-Brown','Jointed Rock','Lainnya'],yn:['Belum / tidak','Ya'],seep:['Tidak dimodelkan','Steady-state','Transien (hujan)'],calib:['Belum','Sudah (back analysis)'],nmc:['1.000 iterasi','2.000 iterasi','5.000 iterasi']});
+const INS=[['prisma','Prisma / total station'],['ssr','Slope stability radar (SSR)'],['gnss','GNSS'],['insar','InSAR'],['ext','Extensometer'],['inc','Inclinometer'],['pz','Piezometer'],['cam','Kamera / CCTV']];
+const def=()=>({perusahaan:'',lokasi:'',idl:'',tgl:new Date().toISOString().slice(0,10),insp:'',jenis:0,H:15,ang:50,mat:1,wth:2,chk:{},ucs:60,rqd:60,spc:0.5,per:1,apt:2,rgh:2,inf:1,wex:2,gw:1,exc:3,sd:55,sdd:120,phi:30,mode:0,c:25,fi:30,gam:20,ru:.2,kh:0,q:0,fkmin:1.3,cvc:30,cvf:10,cvg:5,rho:-.3,nmc:1,pof:5,model:0,E:'',nu:'',psi:'',srf:null,dmax:null,stg:0,seep:0,calib:0,mon:'',tarp1:2,tarp2:10,tarp3:50,ins:{},J:[{n:'J1',d:40,a:125},{n:'J2',d:75,a:215},{n:'J3',d:60,a:20},{n:'',d:'',a:''}]});
+let S=def();try{Object.assign(S,JSON.parse(localStorage.getItem('slopecheck1')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('slopecheck1',JSON.stringify(S))}catch(e){}};
+const fld=(k,l,t='n',u='',o)=>o?`<label>${l}<select data-k="${k}" data-t="i">${o.map((x,i)=>`<option value="${i}"${S[k]==i?' selected':''}>${Array.isArray(x)?x[0]:x}</option>`).join('')}</select></label>`:
+`<label>${l}<span class="iw"><input data-k="${k}" data-t="${t}" type="${t=='n'?'number':t=='d'?'date':'text'}" ${t=='n'?'step="any" inputmode="decimal"':''} value="${S[k]??''}">${u?`<i>${u}</i>`:''}</span></label>`;
+const nv0=(i)=>`<div class="nv">${i>0?`<button data-go="${i-1}">← Sebelumnya</button>`:'<span></span>'}${i<4?`<button class="pr" data-go="${i+1}">Berikutnya →</button>`:''}</div>`;
+const T=['Data Umum','1 · Visual','2 · Massa Batuan','3 · Kinematik','4 · Kesetimbangan Batas','5 · Probabilistik','6 · Numerik','7 · Pemantauan','Hasil Analisis'];
+const flow=()=>S.mode==1?[0,1,2,3,4,5,6,7,8]:[0,1,8];
+const nv=i=>{const f=flow(),k=f.indexOf(i);return `<div class="nv">${k>0?`<button data-go="${f[k-1]}">← Sebelumnya</button>`:'<span></span>'}${k<f.length-1?`<button class="pr" data-go="${f[k+1]}">Berikutnya →</button>`:''}</div>`};
+function build(){
+$('#tabs').innerHTML=flow().map(i=>`<button data-go="${i}">${T[i]}</button>`).join('');
+$('#main').innerHTML=`
+<section class="pane" id="p0"><div class="card"><h2>Mode Input</h2><p class="sub">Pilih sesuai data yang tersedia. Bisa diganti kapan saja; isian tetap tersimpan.</p><div class="mode"><label class="mc"><input type="radio" name="mode" data-mode="0"${S.mode==0?' checked':''}>Visual saja<small>Cukup pengamatan lapangan. Hanya Tingkat 1 yang dinilai.</small></label><label class="mc"><input type="radio" name="mode" data-mode="1"${S.mode==1?' checked':''}>Data lengkap<small>Tingkat 1–7: massa batuan, kinematik, kesetimbangan batas, probabilistik, numerik, pemantauan.</small></label></div></div><div class="card"><h2>Data Umum Inspeksi</h2><p class="sub">Identitas lereng yang diperiksa.</p><div class="f">${fld('perusahaan','Perusahaan / IUP','t')}${fld('lokasi','Lokasi / Blok','t')}${fld('idl','ID / Nama Lereng','t')}${fld('tgl','Tanggal Inspeksi','d')}${fld('insp','Inspektur','t')}${fld('jenis','Jenis Tambang','i','',OPT.jenis)}</div></div>${nv(0)}</section>
+<section class="pane" id="p1"><div class="card"><h2>Tingkat 1 · Penilaian Visual</h2><p class="sub">Geometri, material, dan tanda-tanda ketidakstabilan yang terlihat di lapangan.</p><div class="f">${fld('H','Tinggi lereng keseluruhan','n','m')}${fld('ang','Sudut lereng keseluruhan','n','°')}${fld('mat','Jenis material dominan','i','',OPT.mat)}${fld('wth','Tingkat pelapukan','i','',OPT.wth)}</div></div>
+<div class="card"><h3>Tanda bahaya &amp; faktor pemicu (centang yang teramati)</h3><div class="chk">${IND.map(x=>`<label><input type="checkbox" data-c="${x[0]}"${S.chk[x[0]]?' checked':''}>${x[1]}<em>+${x[2]}</em></label>`).join('')}</div></div><div class="card" id="sub1"></div>${nv(1)}</section>
+<section class="pane" id="p2"><div class="card"><h2>Tingkat 2 · Klasifikasi Massa Batuan</h2><p class="sub">RMR (Bieniawski 1989) dan koreksi orientasi menjadi SMR (Romana). Isi untuk lereng batuan.</p><div class="f">${fld('ucs','Kuat tekan batuan utuh (UCS)','n','MPa')}${fld('rqd','RQD','n','%')}${fld('spc','Spasi diskontinuitas','n','m')}</div></div>
+<div class="card"><h3>Kondisi diskontinuitas &amp; air tanah</h3><div class="f">${fld('per','Kemenerusan','i','',OPT.per)}${fld('apt','Bukaan','i','',OPT.apt)}${fld('rgh','Kekasaran','i','',OPT.rgh)}${fld('inf','Isian','i','',OPT.inf)}${fld('wex','Pelapukan bidang','i','',OPT.wex)}${fld('gw','Kondisi air tanah','i','',OPT.gw)}${fld('exc','Metode penggalian (F4)','i','',OPT.exc)}</div></div><div class="card" id="sub2"></div>${nv(2)}</section>
+<section class="pane" id="p3"><div class="card"><h2>Tingkat 3 · Analisis Kinematik</h2><p class="sub">Dari pengukuran kompas: apakah struktur memungkinkan longsor planar, baji, atau guling?</p><div class="f">${fld('sd','Dip muka lereng','n','°')}${fld('sdd','Dip direction muka lereng','n','°')}${fld('phi','Sudut gesek bidang kekar (φ)','n','°')}</div></div>
+<div class="two s"><div class="card"><h3>Set kekar (maks. 4)</h3><table class="jt"><tr><th>Set</th><th>Dip °</th><th>Dip dir °</th></tr>${S.J.map((j,i)=>`<tr><td><input data-j="${i}.n" value="${j.n}"></td><td><input type="number" data-j="${i}.d" value="${j.d}" inputmode="decimal"></td><td><input type="number" data-j="${i}.a" value="${j.a}" inputmode="decimal"></td></tr>`).join('')}</table><p class="note">Kosongkan baris yang tidak dipakai. Dip 0–90°, dip direction 0–360°.</p></div><div class="card"><h3>Stereonet (proyeksi equal-area)</h3><div id="st1"></div></div></div>${nv(3)}</section>
+<section class="pane" id="p4"><div class="card"><h2>Tingkat 4 · Kesetimbangan Batas 2D</h2><p class="sub">Metode Bishop sederhana, material homogen. Geometri memakai tinggi dan sudut dari Tingkat 1.</p><div class="f">${fld('c','Kohesi (c)','n','kPa')}${fld('fi','Sudut gesek dalam (φ)','n','°')}${fld('gam','Berat isi (γ)','n','kN/m³')}${fld('ru','Rasio tekanan pori (ru)','n','')}${fld('kh','Koefisien seismik (kh)','n','')}${fld('q','Beban di crest','n','kPa')}${fld('fkmin','Kriteria FK minimum','n','')}</div><p class="note">ru: 0 = kering, sekitar 0,2–0,5 = muka air tinggi. kh = 0 untuk kondisi statis. Kriteria FK mengikuti ketentuan yang berlaku untuk lereng tersebut.</p></div><div class="card" id="sub4"></div>${nv(4)}</section>
+<section class="pane" id="p5"><div class="card"><h2>Tingkat 5 · Analisis Probabilistik</h2><p class="sub">Monte Carlo pada bidang gelincir kritis Tingkat 4. Nilai rata-rata diambil dari c, φ, γ di Tingkat 4.</p><div class="f">${fld('cvc','Koef. variasi c','n','%')}${fld('cvf','Koef. variasi φ','n','%')}${fld('cvg','Koef. variasi γ','n','%')}${fld('rho','Korelasi c–φ','n','')}${fld('nmc','Jumlah iterasi','i','',OPT.nmc)}${fld('pof','Target PoF maksimum','n','%')}</div></div><div class="card" id="sub5"></div>${nv(5)}</section>
+<section class="pane" id="p6"><div class="card"><h2>Tingkat 6 · Analisis Numerik</h2><p class="sub">Pemodelan numerik dijalankan di perangkat lunak khusus (RS2, Plaxis, FLAC, dsb.). Masukkan parameter dan hasilnya di sini untuk dibandingkan dengan LEM.</p><div class="f">${fld('model','Model konstitutif','i','',OPT.model)}${fld('E','Modulus Young (E)','n','MPa')}${fld('nu','Poisson ratio (ν)','n','')}${fld('psi','Sudut dilatansi (ψ)','n','°')}${fld('stg','Penggalian bertahap','i','',OPT.yn)}${fld('seep','Analisis rembesan','i','',OPT.seep)}${fld('calib','Kalibrasi','i','',OPT.calib)}${fld('srf','FK hasil Strength Reduction','n','')}${fld('dmax','Perpindahan maksimum','n','m')}</div></div><div class="card" id="sub6"></div>${nv(6)}</section>
+<section class="pane" id="p7"><div class="card"><h2>Tingkat 7 · Pemantauan &amp; Prediksi</h2><p class="sub">Satu baris per pembacaan: hari ke-, perpindahan kumulatif (mm).</p><label>Data pembacaan<textarea data-k="mon" data-t="s" rows="7" placeholder="0, 0&#10;3, 4&#10;6, 11&#10;9, 22">${String(S.mon).replace(/</g,'&lt;')}</textarea></label><div class="f" style="margin-top:12px">${fld('tarp1','Ambang Waspada','n','mm/hari')}${fld('tarp2','Ambang Siaga','n','mm/hari')}${fld('tarp3','Ambang Awas','n','mm/hari')}</div><p class="note">Ambang TARP bersifat spesifik lokasi; sesuaikan dengan dokumen TARP tambang.</p></div><div class="card"><h3>Instrumen terpasang</h3><div class="chk">${INS.map(x=>`<label><input type="checkbox" data-ins="${x[0]}"${S.ins[x[0]]?' checked':''}>${x[1]}</label>`).join('')}</div></div><div class="card" id="sub7"></div>${nv(7)}</section>
+<section class="pane" id="p8"><div id="res"></div>${nv(8)}</section>`;
+}
+function go(e){const b=e.target.closest('[data-go]');if(b)show(+b.dataset.go)}
+function show(i){document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id=='p'+i));document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.go==i));scrollTo({top:0,behavior:'smooth'})}
+// ---- perhitungan
+const f1=A=>A>30?.15:A>20?.4:A>10?.7:A>5?.85:1,f2=b=>b<20?.15:b<30?.4:b<35?.7:b<45?.85:1,f3=d=>d>10?0:Math.abs(d)<=1?-25:d>0?-6:d>-10?-50:-60,f3t=s=>s<110?0:s<=120?-6:-25;
+const nrm=(b,a)=>[Math.sin(b*D)*Math.sin(a*D),Math.sin(b*D)*Math.cos(a*D),Math.cos(b*D)];
+function calc(){const r={};
+const H=+S.H||0,A=+S.ang||0,th=S.mat?[45,60,75]:[25,35,45];
+const sg=[10,30,60].filter(x=>H>x).length,sa=th.filter(x=>A>x).length,sw=[0,0,1,2,3][S.wth],act=IND.filter(x=>S.chk[x[0]]),si=act.reduce((a,x)=>a+x[2],0),tot=sg+sa+sw+si;
+let k1=tot<=6?0:tot<=12?1:tot<=18?2:3;const crit=!!(S.chk.tc&&S.chk.bg);if(crit)k1=Math.max(k1,2);r.t1={sg,sa,sw,si,tot,k:k1,act,crit};
+const u=+S.ucs||0,q=+S.rqd||0,sp=+S.spc||0;
+const rt={ucs:u>250?15:u>100?12:u>50?7:u>25?4:u>5?2:u>1?1:0,rqd:q>90?20:q>75?17:q>50?13:q>25?8:3,spc:sp>2?20:sp>.6?15:sp>.2?10:sp>.06?8:5,
+kond:['per','apt','rgh','inf','wex'].reduce((a,k)=>a+OPT[k][S[k]][1],0),gw:OPT.gw[S.gw][1]};
+const rmr=rt.ucs+rt.rqd+rt.spc+rt.kond+rt.gw,F4=OPT.exc[S.exc][1];
+const sd=+S.sd||0,sdd=+S.sdd||0,phi=+S.phi||0;
+const js=S.J.filter(j=>j.d!==''&&j.a!==''&&!isNaN(j.d)&&!isNaN(j.a)).map((j,i)=>({n:j.n||'J'+(i+1),d:+j.d,a:+j.a}));
+const modes=[],ints=[];
+js.forEach(j=>{const Ap=ad(j.a,sdd);modes.push({t:'Planar',n:j.n,ok:sd>j.d&&j.d>phi&&Ap<=20,p:`dip ${j.d}° vs φ ${phi}°, selisih arah ${Ap.toFixed(0)}°`,adj:f1(Ap)*f2(j.d)*f3(j.d-sd)});
+const At=ad(j.a,sdd+180);modes.push({t:'Toppling',n:j.n,ok:At<=30&&(90-sd)+phi<j.d,p:`arah vs lawan lereng ${At.toFixed(0)}°, (90−ψf)+φ = ${(90-sd+phi).toFixed(0)}° vs dip ${j.d}°`,adj:f1(At)*f3t(j.d+sd)});});
+for(let i=0;i<js.length;i++)for(let k=i+1;k<js.length;k++){const a=nrm(js[i].d,js[i].a),b=nrm(js[k].d,js[k].a);let v=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];const m=Math.hypot(...v);if(m<1e-6)continue;if(v[2]>0)v=v.map(x=>-x);
+const pl=Math.asin(-v[2]/m)/D,tr=(Math.atan2(v[0],v[1])/D+360)%360,Aw=ad(tr,sdd),ok=sd>pl&&pl>phi&&Aw<=90;ints.push({pl,tr,ok});
+modes.push({t:'Baji',n:js[i].n+'∩'+js[k].n,ok,p:`plunge ${pl.toFixed(0)}° / trend ${tr.toFixed(0)}°, vs ψf ${sd}° dan φ ${phi}°`,adj:f1(Aw)*f2(pl)*f3(pl-sd)});}
+const adj=Math.min(0,...modes.map(m=>m.adj)),smr=Math.max(0,Math.min(100,rmr+F4+adj)),sc=smr>80?0:smr>60?1:smr>40?2:smr>20?3:4,n3=modes.filter(m=>m.ok).length,k3=n3?n3<2?1:2:0;
+r.t2={rt,rmr,F4,adj,smr,sc,k:[0,0,1,2,3][sc]};r.t3={modes,ints,js,n3,k:k3,sd,sdd,phi};const full=S.mode==1,p={c:+S.c||0,f:+S.fi||0,gam:+S.gam||0,ru:+S.ru||0,kh:+S.kh||0,q:+S.q||0},fm=+S.fkmin||1.3;
+const b4=full?lem(p):null;r.full=full;r.t4={b:b4,k:b4?kfs(b4.F,fm):0,fm};
+const pt=(+S.pof||5)/100,t5=b4?mc(b4.g,p,[1000,2000,5000][S.nmc]||1000):null;if(t5){t5.n=t5.out.length;t5.k=t5.pof<=pt?0:t5.pof<=3*pt?1:t5.pof<=.2?2:3}r.t5=t5;
+const srf=S.srf>0?+S.srf:null;r.t6={srf,k:srf?kfs(srf,fm):0,diff:srf&&b4?Math.abs(srf-b4.F)/b4.F:null};r.t7=mon();
+r.use={2:full&&S.mat==1,3:full&&S.mat==1,4:!!b4,5:!!t5,6:full&&!!srf,7:full&&r.t7.ok};
+if(!r.use[3])r.t3.modes=[];
+const ks=[k1];if(r.use[2])ks.push(r.t2.k);if(r.use[3])ks.push(k3);if(r.use[4])ks.push(r.t4.k);if(r.use[5])ks.push(t5.k);if(r.use[6])ks.push(r.t6.k);if(r.use[7])ks.push(r.t7.k);
+r.ov=Math.max(...ks);return r}
+const kfs=(F,m)=>F>=m?0:F>=1+(m-1)/2?1:F>=1?2:3,ysf=(x,H,L)=>x<=-L?H:x>=0?0:-x*H/L,TN=['Normal','Waspada','Siaga','Awas'];
+function slicesFor(xc,yc,R,H,L,N=24){let xa=null,xb=null;
+for(let x=Math.max(xc-R,-L-2*H);x<=Math.min(xc+R,3*H);x+=H/80){const yb=yc-Math.sqrt(Math.max(0,R*R-(x-xc)**2));if(yb<ysf(x,H,L)){if(xa===null)xa=x;xb=x}}
+if(xa===null||xb-xa<.3*H)return null;const b=(xb-xa)/N,sl=[];
+for(let i=0;i<N;i++){const x=xa+b*(i+.5),yb=yc-Math.sqrt(Math.max(0,R*R-(x-xc)**2)),h=ysf(x,H,L)-yb;if(h<=0)continue;const sa=(xc-x)/R;sl.push({b,h,sa,ca:Math.sqrt(1-sa*sa),ym:yb+h/2})}
+return sl.length>8?{sl,xa,xb,xc,yc,R}:null}
+function bishop(g,p){const t=Math.tan(p.f*D);let dr=0;
+for(const s of g.sl){const W=p.gam*s.h*s.b+p.q*s.b;dr+=W*s.sa+p.kh*W*(g.yc-s.ym)/g.R}
+if(dr<=0)return 99;let F=1.5;
+for(let k=0;k<30;k++){let rs=0;for(const s of g.sl){const W=p.gam*s.h*s.b+p.q*s.b,m=s.ca+s.sa*t/F;if(m<.2)return 99;rs+=(p.c*s.b+Math.max(0,W-p.ru*p.gam*s.h*s.b)*t)/m}
+const Fn=rs/dr;if(Math.abs(Fn-F)<1e-4){F=Fn;break}F=Fn}return F}
+function lem(p){const H=+S.H||0,L=H/Math.tan((+S.ang||45)*D);if(H<=0||!(p.f>0)||!(p.gam>0))return null;let b=null;
+for(let i=0;i<=14;i++)for(let j=0;j<=11;j++){const xc=-L-.5*H+i*(L+H)/14,yc=H+j*1.5*H/11;
+for(const m of[0,.25,.5,.8]){const R=Math.hypot(xc-m*H,yc),g=slicesFor(xc,yc,R,H,L);if(!g)continue;const F=bishop(g,p);if(!b||F<b.F)b={F,g,H,L}}}
+return b&&b.F<50?b:null}
+function mc(g,p,n){let s=1234567;const rnd=()=>{s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},nz=()=>Math.sqrt(-2*Math.log(rnd()||1e-9))*Math.cos(6.2832*rnd());
+const sc=p.c*(+S.cvc||0)/100,sf=p.f*(+S.cvf||0)/100,sg=p.gam*(+S.cvg||0)/100,rho=Math.max(-.99,Math.min(.99,+S.rho||0)),o=[];
+for(let i=0;i<n;i++){const z1=nz(),z2=rho*z1+Math.sqrt(1-rho*rho)*nz(),z3=nz();o.push(Math.min(5,Math.max(0,bishop(g,{...p,c:Math.max(0,p.c+sc*z1),f:Math.min(60,Math.max(1,p.f+sf*z2)),gam:Math.max(5,p.gam+sg*z3)}))))}
+const mean=o.reduce((a,b)=>a+b,0)/n,sd=Math.sqrt(o.reduce((a,x)=>a+(x-mean)**2,0)/n);return{out:o,mean,sd,pof:o.filter(x=>x<1).length/n,beta:sd?(mean-1)/sd:0}}
+function sect(b){const{H,L,g}=b,x0=-L-1.3*H,x1=2*H,pt=a=>a.map(q=>q[0].toFixed(2)+','+(-q[1]).toFixed(2)).join(' '),yb=x=>g.yc-Math.sqrt(Math.max(0,g.R**2-(x-g.xc)**2)),ar=[];
+for(let i=0;i<=40;i++){const x=g.xa+(g.xb-g.xa)*i/40;ar.push([x,yb(x)])}
+let s=`<svg viewBox="${x0} ${-1.5*H} ${x1-x0} ${2.3*H}" style="width:100%;display:block;background:var(--inp);border-radius:8px"><polygon points="${pt([[x0,H],[-L,H],[0,0],[x1,0],[x1,-.8*H],[x0,-.8*H]])}" fill="#a98b66" stroke="#6b5239" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
+for(let i=0;i<=12;i++){const x=g.xa+(g.xb-g.xa)*i/12;s+=`<polyline points="${pt([[x,ysf(x,H,L)],[x,yb(x)]])}" stroke="#fff" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`}
+return s+`<polyline points="${pt(ar)}" fill="none" stroke="#f2a541" stroke-width="3.5" vector-effect="non-scaling-stroke"/></svg>`}
+function hist(m){const v=m.out,lo=Math.min(...v),hi=Math.max(...v),n=24,w=(hi-lo)/n||1,bn=Array(n).fill(0);v.forEach(x=>bn[Math.min(n-1,Math.floor((x-lo)/w))]++);const mx=Math.max(...bn);
+return `<svg viewBox="0 0 320 160" style="width:100%;max-width:420px">${bn.map((c,i)=>`<rect x="${10+i*12.5}" y="${130-c/mx*110}" width="11" height="${c/mx*110}" fill="${lo+(i+1)*w<=1?'#c0392b':'#3a7ca5'}"/>`).join('')}<path d="M10 130H310" stroke="var(--ink)"/><text x="10" y="148" font-size="11" fill="var(--mut)">${lo.toFixed(1)}</text><text x="310" y="148" font-size="11" text-anchor="end" fill="var(--mut)">${hi.toFixed(1)}</text><text x="160" y="148" font-size="11" text-anchor="middle" fill="var(--mut)">Faktor Keamanan (merah: FK &lt; 1)</text></svg>`}
+function mon(){const pts=(S.mon||'').split('\n').map(l=>l.trim().split(/[,;\t ]+/).map(Number)).filter(a=>a.length>=2&&isFinite(a[0])&&isFinite(a[1])).sort((a,b)=>a[0]-b[0]);
+if(pts.length<3)return{ok:false,pts};const vs=[];
+for(let i=1;i<pts.length;i++){const dt=pts[i][0]-pts[i-1][0];if(dt>0)vs.push({t:pts[i][0],v:(pts[i][1]-pts[i-1][1])/dt})}
+if(vs.length<2)return{ok:false,pts};
+const v=vs[vs.length-1].v,a1=+S.tarp1||2,a2=+S.tarp2||10,a3=+S.tarp3||50,k=v<a1?0:v<a2?1:v<a3?2:3,iv=vs.filter(x=>x.v>0).slice(-6).map(x=>[x.t,1/x.v]);let fit=null,tf=null;
+if(iv.length>=3){const n=iv.length,sx=iv.reduce((a,x)=>a+x[0],0),sy=iv.reduce((a,x)=>a+x[1],0),sxy=iv.reduce((a,x)=>a+x[0]*x[1],0),sxx=iv.reduce((a,x)=>a+x[0]*x[0],0),den=n*sxx-sx*sx;
+if(den){const m=(n*sxy-sx*sy)/den,c0=(sy-m*sx)/n;if(m<0){fit=[m,c0];tf=-c0/m-pts[pts.length-1][0]}}}
+const L=vs.length;return{ok:true,pts,v,k,iv,fit,tf:tf>0&&tf<365?tf:null,acc:L>=3&&vs[L-1].v>vs[L-2].v&&vs[L-2].v>vs[L-3].v,cum:pts[pts.length-1][1]-pts[0][1]}}
+function mchart(m){const iv=m.iv.length>=2,pts=iv?m.iv:m.pts,xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),xl=pts[pts.length-1][0],x0=Math.min(...xs),x1=Math.max(xl+(m.tf||0),...xs),y1=Math.max(...ys)*1.1||1;
+const X=x=>40+(x-x0)/((x1-x0)||1)*260,Y=y=>120-Math.max(0,Math.min(y,y1))/y1*100;
+let s=`<svg viewBox="0 0 320 160" style="width:100%;max-width:420px"><path d="M40 20V120H300" fill="none" stroke="var(--ink)"/><polyline points="${pts.map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="none" stroke="#3a7ca5" stroke-width="2"/>${pts.map(p=>`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3.5" fill="#f2a541"/>`).join('')}`;
+if(iv&&m.fit&&m.tf)s+=`<line x1="${X(x0)}" y1="${Y(m.fit[0]*x0+m.fit[1])}" x2="${X(xl+m.tf)}" y2="${Y(0)}" stroke="#c0392b" stroke-dasharray="5 4"/>`;
+return s+`<text x="40" y="12" font-size="11" fill="var(--mut)">${iv?'Inverse velocity (hari/mm) terhadap waktu':'Perpindahan (mm) terhadap waktu'}</text><text x="300" y="148" font-size="11" text-anchor="end" fill="var(--mut)">hari</text></svg>`}
+const levels=(r,pill)=>{const a=[['Tingkat 1 · Visual',pill(r.t1.k,SH[r.t1.k])]],u=r.use;
+if(u[2])a.push([`Tingkat 2 · SMR ${r.t2.smr.toFixed(0)}`,pill(r.t2.k,'Kelas '+SC[r.t2.sc][0])]);
+if(u[3])a.push(['Tingkat 3 · Kinematik',pill(r.t3.k,r.t3.n3+' mode')]);
+if(u[4])a.push([`Tingkat 4 · FK ${r.t4.b.F.toFixed(2)}`,pill(r.t4.k,r.t4.b.F>=r.t4.fm?'Memenuhi':'Di bawah kriteria')]);
+if(u[5])a.push([`Tingkat 5 · PoF ${(r.t5.pof*100).toFixed(1)}%`,pill(r.t5.k,SH[r.t5.k])]);
+if(u[6])a.push([`Tingkat 6 · FK ${r.t6.srf}`,pill(r.t6.k,SH[r.t6.k])]);
+if(u[7])a.push([`Tingkat 7 · ${r.t7.v.toFixed(1)} mm/hr`,pill(r.t7.k,TN[r.t7.k])]);return a};
+const xrows=(r,pill)=>{const{t4,t5,t6,t7,use}=r;let h='';
+if(!r.full)h+='<tr><td colspan="3" class="note">Mode input visual: hanya Tingkat 1 yang dinilai. Pilih mode Data lengkap untuk Tingkat 2–7.</td></tr>';
+else if(S.mat==0)h+='<tr><td colspan="3" class="note">Tingkat 2–3 dilewati karena material dominan adalah tanah (klasifikasi massa batuan dan kinematik berlaku untuk batuan).</td></tr>';
+if(use[4])h+=`<tr><td>4 · Kesetimbangan batas</td><td>${pill(t4.k,'FK '+t4.b.F.toFixed(2))}</td><td>Bishop sederhana; kriteria FK ${t4.fm}. c ${S.c} kPa, φ ${S.fi}°, γ ${S.gam} kN/m³, ru ${S.ru}, kh ${S.kh}.</td></tr>`;
+if(use[5])h+=`<tr><td>5 · Probabilistik</td><td>${pill(t5.k,'PoF '+(t5.pof*100).toFixed(1)+'%')}</td><td>FK rata-rata ${t5.mean.toFixed(2)}, simpangan baku ${t5.sd.toFixed(2)}, indeks reliabilitas ${t5.beta.toFixed(2)}; target PoF ${S.pof}%.</td></tr>`;
+if(use[6])h+=`<tr><td>6 · Numerik</td><td>${pill(t6.k,'FK '+t6.srf)}</td><td>${t6.diff!==null?'Selisih dengan LEM '+(t6.diff*100).toFixed(0)+'%. ':''}${S.calib?'Terkalibrasi.':'Belum terkalibrasi.'}</td></tr>`;
+if(use[7])h+=`<tr><td>7 · Pemantauan</td><td>${pill(t7.k,TN[t7.k])}</td><td>Kecepatan terakhir ${t7.v.toFixed(1)} mm/hari${t7.tf?'; perkiraan runtuh ± '+t7.tf.toFixed(0)+' hari':''}.</td></tr>`;
+return h};
+const REC=[['Lanjutkan inspeksi rutin sesuai jadwal dan dokumentasikan kondisi (foto, koordinat).','Pertahankan fungsi drainase dan jaga beban di crest tetap terkendali.'],
+['Tingkatkan frekuensi inspeksi dan pasang patok ukur pada retakan atau area mencurigakan.','Perbaiki drainase, kendalikan air permukaan, dan batasi alat berat di dekat crest.'],
+['Batasi akses dan aktivitas pada zona dampak lereng.','Minta analisis Tingkat 4 (kesetimbangan batas) oleh tenaga geoteknik; pasang monitoring deformasi.','Evaluasi koreksi geometri lereng atau perkuatan.'],
+['Hentikan sementara aktivitas di crest dan di bawah lereng; amankan pekerja dan alat.','Kaji ulang desain lereng segera (Tingkat 4–6) dan terapkan monitoring kontinu dengan TARP.']];
+// ---- stereonet
+function steno(r){const R=140,P=(t,p)=>{const q=R*Math.SQRT2*Math.sin((90-p)*D/2);return[q*Math.sin(t*D),-q*Math.cos(t*D)]},rad=p=>Math.abs(P(0,p)[1]);
+const gc=(b,a)=>{const s=[];for(let t=a-90;t<=a+90;t+=3){const p=Math.atan(Math.tan(Math.min(b,89.9)*D)*Math.cos((t-a)*D))/D;s.push(P(t,Math.max(p,0)).map(v=>v.toFixed(1)).join(','))}return s.join(' ')};
+const t3=r.t3;let g=`<svg viewBox="-165 -165 330 330" style="width:100%;max-width:340px;display:block;margin:auto"><circle r="${R}" fill="var(--inp)" stroke="var(--ink)" stroke-width="1.5"/>`;
+[30,60].forEach(p=>g+=`<circle r="${rad(p)}" fill="none" stroke="var(--line)"/>`);
+g+=`<path d="M0 ${-R}V${R}M${-R} 0H${R}" stroke="var(--line)"/><text y="-148" text-anchor="middle" font-size="12" fill="var(--mut)" font-weight="700">N</text><circle r="${rad(t3.phi)}" fill="none" stroke="#c0392b" stroke-dasharray="5 4"/>`;
+g+=`<polyline points="${gc(t3.sd,t3.sdd)}" fill="none" stroke="var(--ink)" stroke-width="3.5"/>`;
+t3.js.forEach((j,i)=>g+=`<polyline points="${gc(j.d,j.a)}" fill="none" stroke="${COL[i]}" stroke-width="2"/>`);
+t3.ints.forEach(x=>{const[a,b]=P(x.tr,x.pl);g+=`<rect x="${a-4}" y="${b-4}" width="8" height="8" transform="rotate(45 ${a} ${b})" fill="${x.ok?'#c0392b':'#7a8699'}"/>`});
+return g+`</svg><div class="lg"><span><b style="color:var(--ink)">▬</b> Muka lereng</span>${t3.js.map((j,i)=>`<span><i style="background:${COL[i]}"></i>${j.n}</span>`).join('')}<span><i style="background:#c0392b;border-radius:2px"></i>Perpotongan kritis</span><span style="color:#c0392b">- - φ</span></div>`}
+// ---- render hasil
+function upd(){const r=calc(),c=k=>`var(--c${k})`,pill=(k,t)=>`<span class="pill" style="--c:${c(k)}">${t}</span>`,{t1,t2,t3,t4,t5,t6,t7,use}=r,lv=levels(r,pill);
+const seg=k=>`<div class="bar">${[0,1,2,3].map(i=>`<span style="${i<=k?'background:'+c(i):''}"></span>`).join('')}</div>`;
+$('#side').innerHTML=`<div class="card"><h3>Penilaian Keseluruhan</h3><div class="ov" style="--c:${c(r.ov)}">${LBL[r.ov]}</div>${seg(r.ov)}<ul class="mini">${lv.map(x=>`<li><span>${x[0]}</span>${x[1]}</li>`).join('')}</ul><ul style="display:none"><li><span>Tingkat 1 · Visual</span>${pill(t1.k,SH[t1.k])}</li><li><span>Tingkat 2 · SMR ${t2.smr.toFixed(0)}</span>${pill(t2.k,'Kelas '+SC[t2.sc][0])}</li><li><span>Tingkat 3 · Kinematik</span>${pill(t3.k,t3.n3+' mode')}</li></ul></div><button class="ghost noprint" style="width:100%;background:var(--navy)" data-go="8">Lihat hasil lengkap →</button>`;
+$('#sub1').innerHTML=`<h3>Skor sementara</h3><div class="ov" style="--c:${c(t1.k)}">${t1.tot} / 27 · Risiko ${SH[t1.k]}</div>${seg(t1.k)}<p class="note">Geometri ${t1.sg} + sudut ${t1.sa} + pelapukan ${t1.sw} + indikator ${t1.si}.${t1.crit?' Retakan tarik dan bulging terdeteksi bersamaan: kelas dinaikkan minimal ke Tinggi.':''}</p>`;
+$('#sub2').innerHTML=`<h3>Skor sementara</h3><div class="kv"><div><small>RMR dasar</small><b>${t2.rmr}</b></div><div><small>Koreksi orientasi</small><b>${t2.adj.toFixed(0)}</b></div><div><small>Koreksi penggalian</small><b>${t2.F4>0?'+':''}${t2.F4}</b></div><div><small>SMR</small><b style="color:${c(t2.k)}">${t2.smr.toFixed(0)}</b></div></div><p class="note">Kelas ${SC[t2.sc][0]} (${SC[t2.sc][1]}): ${SC[t2.sc][2]}. Koreksi orientasi memakai mode paling merugikan dari data kinematik (Tingkat 3).</p>`;
+$('#sub4').innerHTML=t4.b?`<h3>Hasil Bishop sederhana</h3><div class="kv"><div><small>FK minimum</small><b style="color:${c(t4.k)}">${t4.b.F.toFixed(2)}</b></div><div><small>Kriteria FK</small><b>${t4.fm}</b></div><div><small>Status</small><b>${t4.b.F>=t4.fm?'Memenuhi':'Di bawah kriteria'}</b></div></div><div style="margin-top:12px">${sect(t4.b)}</div><p class="note">Bidang gelincir kritis (garis kuning) dicari otomatis. Geometri: tinggi ${S.H} m, sudut ${S.ang}° dari Tingkat 1.</p>`:'<p class="note">Lengkapi tinggi dan sudut (Tingkat 1) serta φ dan γ (positif).</p>';
+$('#sub5').innerHTML=t5?`<h3>Hasil Monte Carlo (${t5.n.toLocaleString('id-ID')} iterasi)</h3><div class="kv"><div><small>PoF (FK &lt; 1)</small><b style="color:${c(t5.k)}">${(t5.pof*100).toFixed(1)}%</b></div><div><small>FK rata-rata</small><b>${t5.mean.toFixed(2)}</b></div><div><small>Simpangan baku</small><b>${t5.sd.toFixed(2)}</b></div><div><small>Indeks reliabilitas</small><b>${t5.beta.toFixed(2)}</b></div></div>${hist(t5)}`:'<p class="note">Selesaikan Tingkat 4 terlebih dahulu.</p>';
+const nf=[S.E,S.nu,S.psi].filter(x=>x!==null&&x!=='').length+(S.stg?1:0)+(S.seep?1:0)+(S.calib?1:0);
+$('#sub6').innerHTML=t6.srf?`<h3>Hasil numerik</h3><div class="kv"><div><small>FK (SRF)</small><b style="color:${c(t6.k)}">${t6.srf}</b></div>${t6.diff!==null?`<div><small>Selisih vs LEM</small><b>${(t6.diff*100).toFixed(0)}%</b></div>`:''}${S.dmax>0&&S.H>0?`<div><small>Perpindahan maks / H</small><b>${(S.dmax/S.H*100).toFixed(2)}%</b></div>`:''}<div><small>Kelengkapan model</small><b>${nf}/6</b></div></div><p class="note">${t6.diff>.15?'Selisih FK dengan LEM lebih dari 15%: periksa parameter, kondisi batas, dan kalibrasi. ':''}${S.calib?'':'Model belum dikalibrasi dengan data monitoring (back analysis). '}Hasil numerik berasal dari perangkat lunak eksternal.</p>`:'<p class="note">Isi FK hasil Strength Reduction dari perangkat lunak numerik untuk membandingkannya dengan LEM.</p>';
+$('#sub7').innerHTML=t7.ok?`<h3>Hasil pemantauan</h3><div class="kv"><div><small>Kecepatan terakhir</small><b style="color:${c(t7.k)}">${t7.v.toFixed(1)} mm/hari</b></div><div><small>Status TARP</small><b>${TN[t7.k]}</b></div><div><small>Perpindahan kumulatif</small><b>${t7.cum.toFixed(0)} mm</b></div><div><small>Perkiraan runtuh</small><b>${t7.tf?'± '+t7.tf.toFixed(0)+' hari':'tidak ada tren'}</b></div></div>${mchart(t7)}<p class="note">${t7.acc?'Kecepatan meningkat tiga pembacaan terakhir (tren percepatan). ':''}Prediksi inverse velocity bersifat indikatif dan perlu dikonfirmasi dengan data tambahan.</p>`:'<p class="note">Masukkan minimal 3 pembacaan agar kecepatan dan status TARP dapat dihitung.</p>';
+const st=steno(r);$('#st1').innerHTML=st;
+const rows=t3.modes.map(m=>`<tr><td>${m.t} · ${m.n}</td><td>${m.p}</td><td>${m.ok?'<b style="color:var(--c3)">Berpotensi</b>':'Tidak'}</td><td>${m.adj.toFixed(1)}</td></tr>`).join('')||'<tr><td colspan="4">Belum ada data kekar.</td></tr>';
+const rc=REC[r.ov].concat((use[4]&&t4.k>0?['FK hasil perhitungan '+t4.b.F.toFixed(2)+' berada di bawah kriteria '+t4.fm+': perbaiki geometri, drainase, atau perkuatan, lalu hitung ulang.']:[]),(use[5]&&t5.k>1?['Probability of Failure tinggi ('+(t5.pof*100).toFixed(1)+'%): kurangi ketidakpastian parameter dengan uji laboratorium tambahan.']:[]),(use[7]&&t7.k>0?['Status TARP '+TN[t7.k]+': tindak lanjuti sesuai prosedur respons yang berlaku di tambang.']:[]),(r.full?[]:['Untuk keputusan yang lebih andal, lengkapi data dan gunakan mode Data lengkap.']),t3.modes.some(m=>m.ok&&m.t=='Planar')?['Ada potensi longsor planar: periksa kekar yang menembus muka lereng dan pertimbangkan penyesuaian arah atau sudut bench.']:[],t3.modes.some(m=>m.ok&&m.t=='Baji')?['Ada potensi baji: petakan garis potong kekar dan periksa tanda baji di lapangan.']:[],t3.modes.some(m=>m.ok&&m.t=='Toppling')?['Ada potensi guling: perhatikan kolom batuan di crest dan retakan paralel muka lereng.']:[]);
+const info=[S.idl,S.lokasi,S.perusahaan].filter(Boolean).join(' · ')||'Lereng belum diberi nama',jn=OPT.jenis[S.jenis];
+$('#res').innerHTML=`<div class="card banner" style="--c:${c(r.ov)}"><h3>Hasil analisis kestabilan lereng</h3><div class="ov">${LBL[r.ov]}</div><p class="sub" style="margin:4px 0 0">${info} · ${jn} · ${S.tgl||''}${S.insp?' · Inspektur: '+S.insp:''}</p>${seg(r.ov)}
+<div class="kv"><div><small>Skor visual</small><b>${t1.tot}/27</b></div>${use[2]?'':'<!--'}<div><small>RMR / SMR</small><b>${t2.rmr} / ${t2.smr.toFixed(0)}</b></div><div><small>Mode longsor potensial</small><b>${t3.n3}</b></div>${use[2]?'':'-->'}${use[4]?`<div><small>FK (LEM)</small><b>${t4.b.F.toFixed(2)}</b></div>`:''}${use[5]?`<div><small>PoF</small><b>${(t5.pof*100).toFixed(1)}%</b></div>`:''}</div></div>
+<div class="card"><h3>Rincian per tingkat</h3><table><tr><th>Tingkat</th><th>Hasil</th><th>Keterangan</th></tr><tr><td>1 · Visual</td><td>${pill(t1.k,SH[t1.k])}</td><td>${t1.act.length?'Teramati: '+t1.act.map(x=>x[1].toLowerCase()).join(', '):'Tidak ada tanda bahaya dicentang'}.</td></tr>${use[2]?'':'<!--'}<tr><td>2 · RMR/SMR</td><td>${pill(t2.k,'Kelas '+SC[t2.sc][0])}</td><td>${SC[t2.sc][1]}: ${SC[t2.sc][2]}. RMR dasar ${t2.rmr} (UCS ${t2.rt.ucs}, RQD ${t2.rt.rqd}, spasi ${t2.rt.spc}, kondisi ${t2.rt.kond}, air ${t2.rt.gw}).</td></tr>${use[2]?'':'-->'}${use[3]?'':'<!--'}<tr><td>3 · Kinematik</td><td>${pill(t3.k,t3.n3?t3.n3+' mode':'Aman')}</td><td>Lereng ${t3.sd}°/${t3.sdd}°, φ = ${t3.phi}°.</td></tr>${use[3]?'':'-->'}${xrows(r,pill)}</table></div>
+<div class="two s">${use[3]?`<div class="card"><h3>Stereonet</h3>${st}</div>`:''}<div class="card"><h3>Rekomendasi tindak lanjut</h3><ul class="rec">${rc.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+${use[4]?`<div class="card"><h3>Penampang lereng (Tingkat 4)</h3>${sect(t4.b)}</div>`:''}${use[5]?`<div class="card"><h3>Sebaran FK (Tingkat 5)</h3>${hist(t5)}</div>`:''}${use[7]?`<div class="card"><h3>Pemantauan (Tingkat 7)</h3>${mchart(t7)}</div>`:''}${use[3]?'':'<div style="display:none">'}<div class="card"><h3>Uji kinematik &amp; penyesuaian SMR</h3><div style="overflow-x:auto"><table><tr><th>Mode</th><th>Parameter</th><th>Kinematik</th><th>Adj. SMR</th></tr>${rows}</table></div></div>${use[3]?'':'</div>'}
+<p class="note">Catatan: hasil ini adalah skrining awal berdasarkan pengamatan dan pengukuran lapangan, bukan pengganti kajian geoteknik (kesetimbangan batas, numerik) maupun penilaian Kepala Teknik Tambang. Skor visual memakai pembobotan sederhana yang dapat disesuaikan dengan kriteria instansi.</p><button class="ghost noprint" style="background:var(--navy)" onclick="window.print()">Cetak / simpan PDF</button>`}
+document.addEventListener('input',e=>{const el=e.target,d=el.dataset;if(d.k){let v=el.value;if(d.t=='n')v=v===''?null:parseFloat(v);else if(d.t=='i')v=parseInt(v);S[d.k]=v}else if(d.c)S.chk[d.c]=el.checked;else if(d.ins)S.ins[d.ins]=el.checked;else if(d.mode!==undefined){S.mode=+d.mode;save();build();upd();show(0);return}else if(d.j){const[i,f]=d.j.split('.');S.J[i][f]=f=='n'?el.value:el.value===''?'':parseFloat(el.value)}else return;save();upd()});
+document.addEventListener('click',go);
+$('#rst').onclick=()=>{if(confirm('Hapus semua isian dan mulai dari awal?')){S=def();save();build();upd();show(0)}};
+build();upd();show(0);
+</script></body></html>
